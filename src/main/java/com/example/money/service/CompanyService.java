@@ -1,5 +1,6 @@
 package com.example.money.service;
 
+import com.example.money.exception.impl.NoCompanyException;
 import com.example.money.model.Company;
 import com.example.money.model.ScrapedResult;
 import com.example.money.persist.CompanyRepository;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -81,5 +83,14 @@ public class CompanyService {
                 .map(e->e.getName())
                 .collect(Collectors.toList());
 
+    }
+    public String deleteCompany(String ticker) {
+        var company = this.companyRepository.findByTicker(ticker)
+                .orElseThrow(NoCompanyException::new);
+        this.dividendRepository.deleteAllByCompanyId(company.getId());
+        this.companyRepository.delete(company);
+
+        this.deleteAutocompleteKeyword(company.getName());
+        return company.getName();
     }
 }
