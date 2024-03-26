@@ -2,7 +2,6 @@ package com.example.money.model;
 
 import lombok.Data;
 
-import java.lang.reflect.Member;
 import java.util.List;
 
 public class Auth {
