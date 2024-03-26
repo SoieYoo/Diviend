@@ -77,9 +77,12 @@ public class CompanyService {
      */
     public List<String> getCompanyNamesByKeyword(String keyword) {
         Pageable limit = PageRequest.of(0,10);
-        Page<CompanyEntity> companyEntities = this.companyRepository.findByNameStartingWithIgnoreCase(keyword, limit);
+        //회사명 키워드 포함해 검색하도록 수정
+        Page<CompanyEntity> companyEntities = this.companyRepository.findByNameContainingIgnoreCase(keyword, limit);
+//        Page<CompanyEntity> companyEntities = this.companyRepository.findByNameStartingWithIgnoreCase(keyword, limit);
         return companyEntities.stream()
                 .map(e->e.getName())
+                .sorted()
                 .collect(Collectors.toList());
 
     }
